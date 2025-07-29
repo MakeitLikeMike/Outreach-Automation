@@ -1,0 +1,245 @@
+﻿Guest Post Outreach Automation System – Implementation Plan (Draft)
+ Goal:
+Automate the entire outreach process—from identifying targets to sending personalized emails and reviewing replies—using Claude Code, APIs, and scripting.
+________________
+
+
+SYSTEM OVERVIEW
+Step
+	Task
+	Tool
+	1
+	Get competitor backlinks
+	DataForSEO Backlinks API
+	2
+	Check domain quality
+	DataForSEO SERP/Domain Info
+	3
+	Find email addresses
+	Tomba.io  (already have this)
+	4
+	Write personalized emails
+	Claude Code
+	5
+	Send outreach emails
+	Mailgun or Gmail API
+	6
+	Monitor + filter replies
+	Gmail API + Claude
+	7
+	Forward good leads
+	Gmail/Zapier/Claude logic
+	________________
+Subscriptions & Tools Required
+ 1. Claude Code (via Anthropic)
+Purpose: Code-writing assistant that powers the scripting, email writing, and logic of the entire system.
+Plan
+	Price
+	Notes
+	Claude Pro (Sonnet 3.5)
+	$17/month
+	Fast, powerful for scripting
+	Claude Team (Opus 3.5)
+	$100–200/month
+	Faster, best performance for larger jobs
+	Start with Claude Pro unless handling heavy volume.
+________________
+
+
+ 2. DataForSEO
+Purpose: Get backlinks + site quality data from competitor domains
+Usage
+	API
+	Est. Credits
+	Price
+	Competitor backlink lookup
+	Backlinks API
+	~100,000 credits/month
+	Starts at $50/month
+	Domain traffic/authority info
+	SERP/Info APIs
+	~50,000 credits/month
+	Included in plan
+	🔗 Pricing: dataforseo.com/pricing
+________________
+
+
+ 3. Tomba.io (Already Subscribed)
+Purpose: Find webmaster email addresses from domains
+________________
+
+
+ 4. Email Sending Options
+Option A: Mailgun
+Plan
+	Price
+	Notes
+	Flex (5,000 emails/month)
+	Free for 3 months
+	Good for outreach scaling
+	Foundation
+	$35/month
+	After free tier ends
+	🔗 https://www.mailgun.com/pricing/
+Option B: Gmail API (if low volume)
+* Free if using Gmail or Google Workspace
+
+* Requires API setup, credentials, and rate limits apply
+
+________________
+
+
+ 5. Zapier or Gmail Filters (Optional)
+Purpose: Forward good replies to humans (you or your manager)
+Tool
+	Price
+	Notes
+	Gmail Filter
+	Free
+	Set up forwarding rule
+	Zapier
+	Free plan (100 tasks/month)
+	Use to auto-forward "tagged" replies
+	________________
+
+
+ 6. Email Parser (Optional)
+Purpose: Classify reply types (interested, not interested, auto-reply)
+Tool
+	Price
+	Notes
+	Claude LLM (included)
+	Free in Claude Pro
+	Can parse & filter replies
+	Mailparser.io
+	Free plan or $39/month
+	Optional if you want structured parsing
+	________________
+
+
+Automation Flow Diagram
+
+
+Competitor URLs
+    ↓
+DataForSEO Backlinks API → Target Domains
+    ↓
+DataForSEO SERP Info → Filter High-Quality Sites
+    ↓
+Tomba.io → Get Emails
+    ↓
+Claude → Write Emails
+    ↓
+Mailgun/Gmail → Send Emails
+    ↓
+Gmail API → Monitor Replies
+    ↓
+Claude → Classify Replies
+    ↓
+Zapier/Gmail → Forward Interested Leads to Human
+
+
+________________
+
+
+Claude Code Folder Structure (Example)
+guestpost-outreach-system/
+├── scripts/
+│   ├── fetch_backlinks.ts        # Step 1
+│   ├── filter_domains.ts         # Step 2
+│   ├── get_emails.ts             # Step 3
+│   ├── write_emails.ts           # Step 4
+│   ├── send_emails.ts            # Step 5
+│   ├── monitor_replies.ts        # Step 6
+│   └── forward_leads.ts          # Step 7
+├── data/
+│   └── targets.csv               # Cleaned list of outreach targets
+├── email_templates/
+│   └── default.md                # Claude uses this to draft email copy
+├── .env                          # API keys securely stored
+└── README.md                     # How to run the whole pipeline
+
+
+________________
+
+
+Final Subscription Summary (Monthly Cost Estimate)
+Tool
+	Estimated Monthly Cost
+	Claude Pro
+	$17
+	DataForSEO
+	$50+ (scales by usage)
+	Tomba.io
+	✅ Already subscribed
+	Mailgun (after free trial)
+	$35 (or free Gmail)
+	Zapier / Gmail filters
+	Free
+	Estimated Total: ~$100/month
+ (if using Mailgun + Claude Pro + DataForSEO)
+________________
+
+
+
+
+
+System/App UI Draft:
+
+https://claude.ai/public/artifacts/95e322ff-3c54-4a30-89fa-01a7264cc118 
+
+
+
+
+___________________________________________________________________________
+ Domain Grading Metrics ( Quality + Quantity Review)
+
+
+Quantity Filters:
+Use these thresholds to exclude low-quality sites during Steps 1–2 of the outreach pipeline.
+Metric
+	Threshold
+	Source
+	Referring Domains
+	≥ 100
+	DataForSEO 
+	Organic Traffic
+	≥ 5,000/month (stable or increasing)
+	DataForSEO
+	Domain Rating (DR)
+	≥ 30
+	Ahrefs /DataForSEO
+	Ranking Keywords
+	≥ 100
+	Ahrefs / DataForSEO
+	200-status Pages
+	≥ 80%
+	DataForSEO/ Will look for other API
+	Traffic Spread
+	Logarithmic (not homepage-only)
+	DataForSEO/ Will look for other API
+
+
+
+
+	
+
+Quality Review:
+Used for final QA pass before email is sent, or integrated into Claude’s classification logic.
+   * Site has a contact page with email or form (e.g., info@domain.com)
+
+   * Site topic is relevant or adjacent to casino, finance, entertainment, etc.
+
+   * Post appears in the main blog/feed (not buried or hidden)
+
+   * Editorial backlinks on first 1–2 pages of backlink report
+
+   * Anchor texts look natural, not spammy or keyword-stuffed
+
+   * Other blog content is high-quality and not spun or AI junk
+
+   * Traffic is niche-relevant (not irrelevant junk traffic)
+
+   * Site ranks for keywords related to your niche
+
+   * DR-to-traffic ratio is natural (e.g., DR 50 should have ~10k+ traffic)
