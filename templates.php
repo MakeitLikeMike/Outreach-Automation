@@ -1,4 +1,7 @@
 <?php
+require_once 'auth.php';
+$auth->requireAuth();
+
 require_once 'classes/EmailTemplate.php';
 
 $emailTemplate = new EmailTemplate();
@@ -55,48 +58,44 @@ if ($templateId && in_array($action, ['edit', 'view', 'preview'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Templates - Outreach Automation</title>
+    <title>Email Templates - Auto Outreach</title>
+    <link rel="icon" type="image/png" href="logo/logo.png">
     <link rel="stylesheet" href="assets/css/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <nav class="sidebar">
-        <div class="sidebar-header">
-            <h2><i class="fas fa-envelope"></i> Outreach Automation</h2>
-        </div>
-        <ul class="nav-menu">
-            <li><a href="index.php"><i class="fas fa-dashboard"></i> Dashboard</a></li>
-            <li><a href="campaigns.php"><i class="fas fa-bullhorn"></i> Campaigns</a></li>
-            <li><a href="domains.php"><i class="fas fa-globe"></i> Domain Analysis</a></li>
-            <li><a href="templates.php" class="active"><i class="fas fa-file-text"></i> Email Templates</a></li>
-            <li><a href="monitoring.php"><i class="fas fa-chart-line"></i> Monitoring</a></li>
-            <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
-        </ul>
-    </nav>
+    <?php include 'includes/navigation.php'; ?>
 
     <main class="main-content">
         <header class="top-header">
-            <h1>
-                <?php
-                switch ($action) {
-                    case 'new':
-                    case 'create':
-                        echo 'Create New Template';
-                        break;
-                    case 'edit':
-                        echo 'Edit Template';
-                        break;
-                    case 'view':
-                        echo 'Template Details';
-                        break;
-                    case 'preview':
-                        echo 'Template Preview';
-                        break;
-                    default:
-                        echo 'Email Templates';
-                }
-                ?>
-            </h1>
+            <div class="header-left">
+                <?php if ($action !== 'list'): ?>
+                <button onclick="goBack()" class="back-btn" title="Go Back">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <?php endif; ?>
+                <h1>
+                    <?php
+                    switch ($action) {
+                        case 'new':
+                        case 'create':
+                            echo 'Create New Template';
+                            break;
+                        case 'edit':
+                            echo 'Edit Template';
+                            break;
+                        case 'view':
+                            echo 'Template Details';
+                            break;
+                        case 'preview':
+                            echo 'Template Preview';
+                            break;
+                        default:
+                            echo 'Email Templates';
+                    }
+                    ?>
+                </h1>
+            </div>
         </header>
 
         <div style="padding: 2rem;">
@@ -127,14 +126,12 @@ if ($templateId && in_array($action, ['edit', 'view', 'preview'])) {
                                     <tr>
                                         <th>Template Name</th>
                                         <th>Subject Line</th>
-                                        <th>Default</th>
                                         <th>Created</th>
-                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($templates as $template): ?>
-                                        <tr>
+                                        <tr class="clickable-row" onclick="window.location.href='templates.php?action=preview&id=<?php echo $template['id']; ?>'">
                                             <td>
                                                 <strong><?php echo htmlspecialchars($template['name']); ?></strong>
                                                 <?php if ($template['is_default']): ?>
@@ -142,27 +139,7 @@ if ($templateId && in_array($action, ['edit', 'view', 'preview'])) {
                                                 <?php endif; ?>
                                             </td>
                                             <td><?php echo htmlspecialchars(substr($template['subject'], 0, 50)) . (strlen($template['subject']) > 50 ? '...' : ''); ?></td>
-                                            <td>
-                                                <?php if ($template['is_default']): ?>
-                                                    <i class="fas fa-check text-success"></i>
-                                                <?php else: ?>
-                                                    <i class="fas fa-times text-muted"></i>
-                                                <?php endif; ?>
-                                            </td>
                                             <td><?php echo date('M j, Y', strtotime($template['created_at'])); ?></td>
-                                            <td>
-                                                <a href="templates.php?action=preview&id=<?php echo $template['id']; ?>" class="btn btn-sm btn-success">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                <a href="templates.php?action=edit&id=<?php echo $template['id']; ?>" class="btn btn-sm btn-secondary">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <?php if (!$template['is_default']): ?>
-                                                    <a href="templates.php?action=delete&id=<?php echo $template['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
-                                                        <i class="fas fa-trash"></i>
-                                                    </a>
-                                                <?php endif; ?>
-                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -381,6 +358,11 @@ Use variables for personalization:
                             <a href="templates.php?action=edit&id=<?php echo $currentTemplate['id']; ?>" class="btn btn-primary">
                                 <i class="fas fa-edit"></i> Edit Template
                             </a>
+                            <?php if (!$currentTemplate['is_default']): ?>
+                                <a href="templates.php?action=delete&id=<?php echo $currentTemplate['id']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this template?')">
+                                    <i class="fas fa-trash"></i> Delete Template
+                                </a>
+                            <?php endif; ?>
                             <a href="templates.php" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Back to Templates
                             </a>

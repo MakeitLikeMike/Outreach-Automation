@@ -1,0 +1,78 @@
+# Bluehost-Compatible .htaccess for Auto Outreach System
+# Simplified configuration for Bluehost shared hosting
+
+# =======================================================================
+# BASIC PHP SETTINGS
+# =======================================================================
+
+# Basic PHP settings (only what Bluehost allows)
+php_value max_execution_time 300
+php_value memory_limit 256M
+php_value post_max_size 64M
+php_value upload_max_filesize 64M
+
+# =======================================================================
+# DIRECTORY ACCESS
+# =======================================================================
+
+# Default directory index files
+DirectoryIndex index.php index.html
+
+# =======================================================================
+# URL REWRITING
+# =======================================================================
+
+RewriteEngine On
+RewriteBase /
+
+# Allow direct access to PHP files
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule \. - [L]
+
+# Handle main application pages
+RewriteRule ^campaigns/?$ campaigns.php [L,QSA]
+RewriteRule ^monitoring/?$ monitoring.php [L,QSA]
+RewriteRule ^quick-outreach/?$ quick_outreach.php [L,QSA]
+RewriteRule ^domains/?$ domains.php [L,QSA]
+RewriteRule ^templates/?$ templates.php [L,QSA]
+RewriteRule ^settings/?$ settings.php [L,QSA]
+RewriteRule ^admin/?$ admin.php [L,QSA]
+
+# =======================================================================
+# BASIC SECURITY
+# =======================================================================
+
+# Protect sensitive files
+<Files ".env*">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "*.log">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "*.sql">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "composer.*">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Protect directories
+Options -Indexes
+
+# =======================================================================
+# MIME TYPES
+# =======================================================================
+
+AddType application/javascript .js
+AddType text/css .css
+
+# =======================================================================
+# END
+# =======================================================================

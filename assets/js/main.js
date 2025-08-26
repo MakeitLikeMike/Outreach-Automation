@@ -47,6 +47,18 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebar.classList.toggle('open');
         });
     }
+});
+
+// Universal back function (removed duplicate)
+
+// Enhanced go back with specific fallback
+function goBackTo(fallbackUrl) {
+    if (window.history.length > 1 && document.referrer) {
+        window.history.back();
+    } else {
+        window.location.href = fallbackUrl;
+    }
+}
 
     // Auto-hide alerts after 5 seconds
     const alerts = document.querySelectorAll('.alert');
@@ -84,10 +96,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Form validation
+    // Form validation with duplicate submission prevention
     const forms = document.querySelectorAll('form');
     forms.forEach(form => {
+        let isSubmitting = false;
+        
         form.addEventListener('submit', function(e) {
+            // Prevent double submissions
+            if (isSubmitting) {
+                e.preventDefault();
+                return false;
+            }
+
             const requiredFields = form.querySelectorAll('[required]');
             let isValid = true;
 
@@ -103,7 +123,26 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!isValid) {
                 e.preventDefault();
                 alert('Please fill in all required fields.');
+                return false;
             }
+
+            // Mark as submitting and disable submit buttons
+            isSubmitting = true;
+            const submitButtons = form.querySelectorAll('button[type="submit"], input[type="submit"]');
+            submitButtons.forEach(btn => {
+                btn.disabled = true;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                
+                // Re-enable if form submission fails
+                setTimeout(() => {
+                    if (isSubmitting) {
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+                        isSubmitting = false;
+                    }
+                }, 30000); // Reset after 30 seconds
+            });
         });
     });
 
@@ -256,7 +295,7 @@ function isValidUrl(string) {
     }
 }
 
-// API call helper
+// API call helper with debug support
 async function apiCall(endpoint, method = 'GET', data = null) {
     const options = {
         method: method,
@@ -271,7 +310,28 @@ async function apiCall(endpoint, method = 'GET', data = null) {
 
     try {
         const response = await fetch(endpoint, options);
-        return await response.json();
+        
+        // First get the response as text to debug JSON parsing issues
+        const responseText = await response.text();
+        
+        // Try to parse as JSON
+        try {
+            return JSON.parse(responseText);
+        } catch (jsonError) {
+            console.error('JSON parsing failed:', jsonError);
+            console.error('Response text:', responseText);
+            console.error('Response headers:', [...response.headers.entries()]);
+            
+            // Return a structured error response
+            return {
+                success: false,
+                error: 'Invalid JSON response from server',
+                debug: {
+                    responseText: responseText,
+                    parseError: jsonError.message
+                }
+            };
+        }
     } catch (error) {
         console.error('API call failed:', error);
         throw error;
@@ -329,3 +389,65 @@ function showToast(message, type = 'info') {
         setTimeout(() => toast.remove(), 300);
     }, 5000);
 }
+
+// Back Button functionality with smart navigation
+function goBack() {
+    try {
+        // Simple approach: try browser back first, then fallback
+        if (window.history.length > 1) {
+            window.history.back();
+            
+            // Set a timeout to check if back navigation worked
+            // If page doesn't change in 100ms, use fallback
+            setTimeout(() => {
+                // This will only execute if history.back() failed
+                const currentPath = window.location.pathname.toLowerCase();
+                
+                if (currentPath.includes('campaign')) {
+                    window.location.href = 'campaigns.php';
+                } else if (currentPath.includes('domain')) {
+                    window.location.href = 'domains.php';  
+                } else if (currentPath.includes('template')) {
+                    window.location.href = 'templates.php';
+                } else if (currentPath.includes('monitoring')) {
+                    window.location.href = 'monitoring.php';
+                } else if (currentPath.includes('setting')) {
+                    window.location.href = 'settings.php';
+                } else {
+                    // Default fallback to dashboard
+                    window.location.href = 'index.php';
+                }
+            }, 100);
+        } else {
+            // No history available, use immediate fallback
+            const currentPath = window.location.pathname.toLowerCase();
+            
+            if (currentPath.includes('campaign')) {
+                window.location.href = 'campaigns.php';
+            } else if (currentPath.includes('domain')) {
+                window.location.href = 'domains.php';  
+            } else if (currentPath.includes('template')) {
+                window.location.href = 'templates.php';
+            } else if (currentPath.includes('monitoring')) {
+                window.location.href = 'monitoring.php';
+            } else if (currentPath.includes('setting')) {
+                window.location.href = 'settings.php';
+            } else {
+                // Default fallback to dashboard
+                window.location.href = 'index.php';
+            }
+        }
+    } catch (error) {
+        console.warn('Back navigation error:', error);
+        // Final fallback to dashboard
+        window.location.href = 'index.php';
+    }
+}
+
+// Add keyboard shortcut for back button (Alt + Left Arrow)
+document.addEventListener('keydown', function(e) {
+    if (e.altKey && e.key === 'ArrowLeft') {
+        e.preventDefault();
+        goBack();
+    }
+});

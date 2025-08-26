@@ -1,0 +1,156 @@
+/* Campaigns page specific styles */
+.progress-bar {
+    width: 100px;
+    height: 8px;
+    background-color: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 4px 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #059669);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-bar[title*="0%"] .progress-fill {
+    background: #ef4444;
+}
+
+.progress-bar[title*="100%"] .progress-fill {
+    background: #10b981;
+}
+
+td small {
+    display: block;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+/* Checkbox styling for table */
+.table th input[type="checkbox"],
+.table td input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    transform: scale(1.2);
+}
+
+.table th:first-child,
+.table td:first-child {
+    width: 40px;
+    text-align: center;
+}
+
+/* Clickable row styling for domains table */
+.clickable-row:hover {
+    background-color: #f8fafc !important;
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.clickable-row:hover td {
+    color: #1e40af;
+}
+
+.clickable-row td {
+    transition: color 0.2s ease;
+}
+
+/* Automation Panel Styling */
+.automation-panel {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 10px;
+}
+
+.automation-panel .checkbox-group {
+    margin: 15px 0;
+    padding: 12px;
+    background: white;
+    border-radius: 6px;
+    border-left: 4px solid #3b82f6;
+}
+
+.automation-panel .checkbox-label {
+    font-size: 14px;
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+.automation-summary {
+    margin-top: 20px;
+}
+
+.automation-summary .alert {
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.alert-info {
+    background-color: #dbeafe;
+    border: 1px solid #93c5fd;
+    color: #1e40af;
+}
+
+/* Pipeline Status Styling */
+.pipeline-status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-created { background: #f3f4f6; color: #374151; }
+.status-processing_domains { background: #fef3c7; color: #92400e; }
+.status-analyzing_quality { background: #ddd6fe; color: #7c3aed; }
+.status-finding_emails { background: #bfdbfe; color: #1d4ed8; }
+.status-sending_outreach { background: #fed7aa; color: #ea580c; }
+.status-monitoring_replies { background: #bbf7d0; color: #059669; }
+.status-completed { background: #dcfce7; color: #16a34a; }
+
+/* Metric Stack Styling */
+.metric-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.metric-stack div {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.metric-stack strong {
+    color: #1f2937;
+    font-size: 14px;
+}
+
+.metric-stack small {
+    color: #6b7280;
+    font-size: 11px;
+}
+
+/* Enhanced Progress Bar */
+.progress-bar {
+    width: 100px;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 2px 0;
+}
+
+.progress-fill {
+    height: 100%;
+    transition: width 0.3s ease;
+    border-radius: 4px;
+}

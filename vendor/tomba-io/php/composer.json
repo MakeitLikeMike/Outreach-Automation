@@ -1,0 +1,43 @@
+{
+    "name": "tomba-io/php",
+    "description": "Tomba.io is an Email Finder for B2B sales and email marketing",
+    "type": "library",
+    "license": "Apache-2.0",
+    "keywords": ["email", "Email Finder", "Email Verifier", "B2B", "email marketing"],
+    "homepage": "https://tomba.io/",
+    "support": {
+        "url": "https://tomba.io",
+        "email": "info@tomba.io"
+    },
+    "authors": [{
+        "name": "Mohamed Ben rebia",
+        "email": "b.mohamed@tomba.io",
+        "homepage": "https://github.com/benemohamed",
+        "role": "Developer"
+    }],
+    "scripts": {
+        "format" : "phpcbf -p --standard=PSR2 src/ examples/",
+        "check"  : "phpcs -p --standard=PSR2 src/ examples/"
+    },
+    "autoload": {
+        "psr-4": {
+            "Tomba\\": "src/Tomba"
+        }
+    },
+    "require": {
+        "php": ">=7.1.0",
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "3.*"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-1.0": "1.0.x-dev"
+        }
+    }
+}
